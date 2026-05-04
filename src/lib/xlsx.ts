@@ -17,6 +17,15 @@ function heatColor(t: number): string {
 	return `FF${hex(r)}${hex(g)}${hex(b)}`;
 }
 
+function neutralize(label: string): string {
+	if (label.length === 0) return label;
+	const first = label[0];
+	if (first === "=" || first === "+" || first === "-" || first === "@" || first === "\t") {
+		return `'${label}`;
+	}
+	return label;
+}
+
 function findRange(result: PivotResult): { min: number; max: number } {
 	let min = Infinity;
 	let max = -Infinity;
@@ -56,7 +65,10 @@ export async function pivotToXlsx(
 		views: [{ state: "frozen", xSplit: 1, ySplit: 1 }],
 	});
 
-	const headerRow = [`${rowLabel} \\ ${colLabel}`, ...result.cols];
+	const headerRow = [
+		neutralize(`${rowLabel} \\ ${colLabel}`),
+		...result.cols.map(neutralize),
+	];
 	if (config.showTotals) headerRow.push("Total");
 	sheet.addRow(headerRow);
 
@@ -66,7 +78,7 @@ export async function pivotToXlsx(
 
 	for (const r of result.rows) {
 		const rowMap = result.cells.get(r);
-		const rowValues: (string | number)[] = [r];
+		const rowValues: (string | number)[] = [neutralize(r)];
 		const rowTotal = result.rowTotals.get(r) ?? 0;
 		for (const c of result.cols) {
 			const cell = rowMap?.get(c);

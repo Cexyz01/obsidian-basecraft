@@ -1,11 +1,21 @@
 import type { PivotConfig } from "../views/pivot/options";
 import type { PivotResult } from "../views/pivot/compute";
 
-function escape(field: string): string {
-	if (/[",\n\r]/.test(field)) {
-		return `"${field.replace(/"/g, '""')}"`;
+function neutralizeFormula(field: string): string {
+	if (field.length === 0) return field;
+	const first = field[0];
+	if (first === "=" || first === "+" || first === "-" || first === "@" || first === "\t") {
+		return `'${field}`;
 	}
 	return field;
+}
+
+function escape(field: string): string {
+	const safe = neutralizeFormula(field);
+	if (/[",\n\r]/.test(safe)) {
+		return `"${safe.replace(/"/g, '""')}"`;
+	}
+	return safe;
 }
 
 function fmt(n: number): string {
