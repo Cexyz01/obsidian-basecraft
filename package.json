@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-basecraft",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"description": "Advanced views, formulas and filters for Obsidian Bases.",
 	"main": "main.js",
 	"type": "module",

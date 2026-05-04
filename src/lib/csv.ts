@@ -12,13 +12,15 @@ function fmt(n: number): string {
 	return Number.isInteger(n) ? n.toString() : n.toFixed(4);
 }
 
+const BOM = "﻿";
+
 export function pivotToCsv(
 	result: PivotResult,
 	config: PivotConfig,
 	rowLabel: string,
 	colLabel: string
 ): string {
-	const lines: string[] = [];
+	const lines: string[] = ["sep=,"];
 
 	const header = [escape(`${rowLabel} \\ ${colLabel}`)];
 	for (const c of result.cols) header.push(escape(c));
@@ -43,7 +45,7 @@ export function pivotToCsv(
 		lines.push(totals.join(","));
 	}
 
-	return lines.join("\n");
+	return BOM + lines.join("\r\n");
 }
 
 export function downloadFile(filename: string, contents: string, mime: string): void {
