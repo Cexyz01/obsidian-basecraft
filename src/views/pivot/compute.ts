@@ -1,10 +1,3 @@
-/**
- * Pivot aggregation engine.
- *
- * Pure functions over BasesEntry[] — no DOM, no Obsidian rendering coupling.
- * This is the part with the highest test value; keep it framework-free.
- */
-
 import type { BasesEntry, BasesPropertyId } from "obsidian";
 import type { PivotAggregation, PivotConfig } from "./options";
 
@@ -23,25 +16,19 @@ export interface PivotResult {
 	grandTotal: number;
 }
 
-const EMPTY_LABEL = "(empty)";
+const EMPTY = "(empty)";
 
-function entryToLabel(
-	entry: BasesEntry,
-	propId: BasesPropertyId | null
-): string {
-	if (!propId) return "";
-	const v = entry.getValue(propId);
-	if (v == null) return EMPTY_LABEL;
+function label(entry: BasesEntry, prop: BasesPropertyId | null): string {
+	if (!prop) return "";
+	const v = entry.getValue(prop);
+	if (v == null) return EMPTY;
 	const s = v.toString();
-	return s.length === 0 ? EMPTY_LABEL : s;
+	return s.length === 0 ? EMPTY : s;
 }
 
-function entryToNumber(
-	entry: BasesEntry,
-	propId: BasesPropertyId | null
-): number | null {
-	if (!propId) return null;
-	const v = entry.getValue(propId);
+function num(entry: BasesEntry, prop: BasesPropertyId | null): number | null {
+	if (!prop) return null;
+	const v = entry.getValue(prop);
 	if (v == null) return null;
 	const n = parseFloat(v.toString());
 	return Number.isFinite(n) ? n : null;
@@ -53,58 +40,51 @@ function aggregate(
 	valueProp: BasesPropertyId | null
 ): number {
 	if (entries.length === 0) return 0;
-
 	if (agg === "count") return entries.length;
 
 	if (agg === "distinct") {
 		if (!valueProp) return 0;
-		const set = new Set<string>();
-		for (const e of entries) set.add(entryToLabel(e, valueProp));
-		return set.size;
+		const seen = new Set<string>();
+		for (const e of entries) seen.add(label(e, valueProp));
+		return seen.size;
 	}
 
-	const nums: number[] = [];
+	const xs: number[] = [];
 	for (const e of entries) {
-		const n = entryToNumber(e, valueProp);
-		if (n != null) nums.push(n);
+		const n = num(e, valueProp);
+		if (n != null) xs.push(n);
 	}
-	if (nums.length === 0) return 0;
+	if (xs.length === 0) return 0;
 
 	switch (agg) {
 		case "sum":
-			return nums.reduce((a, b) => a + b, 0);
+			return xs.reduce((a, b) => a + b, 0);
 		case "avg":
-			return nums.reduce((a, b) => a + b, 0) / nums.length;
+			return xs.reduce((a, b) => a + b, 0) / xs.length;
 		case "min":
-			return Math.min(...nums);
+			return Math.min(...xs);
 		case "max":
-			return Math.max(...nums);
+			return Math.max(...xs);
 		case "median": {
-			const sorted = [...nums].sort((a, b) => a - b);
-			const mid = Math.floor(sorted.length / 2);
-			if (sorted.length % 2 === 0) {
-				return (sorted[mid - 1]! + sorted[mid]!) / 2;
-			}
-			return sorted[mid]!;
+			xs.sort((a, b) => a - b);
+			const mid = Math.floor(xs.length / 2);
+			return xs.length % 2 ? xs[mid]! : (xs[mid - 1]! + xs[mid]!) / 2;
 		}
 		default:
 			return 0;
 	}
 }
 
-export function computePivot(
-	entries: BasesEntry[],
-	config: PivotConfig
-): PivotResult {
+export function computePivot(entries: BasesEntry[], config: PivotConfig): PivotResult {
 	const { rowDim, colDim, aggregation, valueProp } = config;
 
 	const rowSet = new Set<string>();
 	const colSet = new Set<string>();
-	const groups = new Map<string, BasesEntry[]>(); // key = `${row}|||${col}`
+	const groups = new Map<string, BasesEntry[]>();
 
 	for (const entry of entries) {
-		const r = entryToLabel(entry, rowDim);
-		const c = entryToLabel(entry, colDim);
+		const r = label(entry, rowDim);
+		const c = label(entry, colDim);
 		rowSet.add(r);
 		colSet.add(c);
 		const key = `${r}|||${c}`;

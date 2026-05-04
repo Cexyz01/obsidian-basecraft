@@ -21,23 +21,16 @@ export default class BasecraftPlugin extends Plugin {
 		});
 
 		if (!ok) {
-			new Notice(
-				"Basecraft: Bases view registration failed. Is the Bases core plugin enabled?"
-			);
+			new Notice("Basecraft: failed to register the Pivot view. Make sure the Bases core plugin is enabled.");
 		}
 	}
 
 	async loadSettings(): Promise<void> {
-		const stored = (await this.loadData()) as
-			| Partial<BasecraftSettings>
-			| null;
+		const stored = (await this.loadData()) as Partial<BasecraftSettings> | null;
 		this.settings = {
 			...DEFAULT_SETTINGS,
 			...(stored ?? {}),
-			license: {
-				...DEFAULT_SETTINGS.license,
-				...(stored?.license ?? {}),
-			},
+			license: { ...DEFAULT_SETTINGS.license, ...(stored?.license ?? {}) },
 		};
 	}
 

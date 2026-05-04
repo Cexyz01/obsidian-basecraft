@@ -35,12 +35,8 @@ export class PivotView extends BasesView {
 	onload(): void {
 		this.hostEl.empty();
 		this.hostEl.addClass("basecraft-view");
-		this.toolbarEl = this.hostEl.createDiv({
-			cls: "basecraft-pivot-toolbar-wrapper",
-		});
-		this.bodyEl = this.hostEl.createDiv({
-			cls: "basecraft-pivot-body",
-		});
+		this.toolbarEl = this.hostEl.createDiv({ cls: "basecraft-pivot-toolbar-wrapper" });
+		this.bodyEl = this.hostEl.createDiv({ cls: "basecraft-pivot-body" });
 	}
 
 	onunload(): void {
@@ -51,7 +47,6 @@ export class PivotView extends BasesView {
 		const cfg = loadPivotConfig(this.config);
 		const proActive = isPro(this.plugin);
 
-		// Downgrade Pro-only aggregation silently if user lost their license.
 		if (!proActive && isProAggregation(cfg.aggregation)) {
 			cfg.aggregation = "count";
 		}
@@ -65,23 +60,17 @@ export class PivotView extends BasesView {
 	private collectProperties(): PropertyChoice[] {
 		const order = this.config.getOrder() ?? [];
 		const seen = new Set<string>(order);
-		const all = (this.allProperties ?? []).filter((p) => !seen.has(p));
-		return [...order, ...all].map((id) => ({
+		const rest = (this.allProperties ?? []).filter((p) => !seen.has(p));
+		return [...order, ...rest].map((id) => ({
 			id,
 			label: this.config.getDisplayName(id) ?? id,
 		}));
 	}
 
-	private drawToolbar(
-		cfg: PivotConfig,
-		props: PropertyChoice[],
-		proActive: boolean
-	): void {
+	private drawToolbar(cfg: PivotConfig, props: PropertyChoice[], proActive: boolean): void {
 		renderToolbar(this.toolbarEl, cfg, props, proActive, {
-			onRowDimChange: (v) =>
-				this.update({ rowDim: v as BasesPropertyId | null }),
-			onColDimChange: (v) =>
-				this.update({ colDim: v as BasesPropertyId | null }),
+			onRowDimChange: (v) => this.update({ rowDim: v as BasesPropertyId | null }),
+			onColDimChange: (v) => this.update({ colDim: v as BasesPropertyId | null }),
 			onAggregationChange: (v) => {
 				const agg = v as PivotAggregation;
 				if (isProAggregation(agg) && !proActive) {
@@ -90,8 +79,7 @@ export class PivotView extends BasesView {
 				}
 				this.update({ aggregation: agg });
 			},
-			onValuePropChange: (v) =>
-				this.update({ valueProp: v as BasesPropertyId | null }),
+			onValuePropChange: (v) => this.update({ valueProp: v as BasesPropertyId | null }),
 		});
 	}
 
@@ -112,7 +100,7 @@ export class PivotView extends BasesView {
 			colDimLabel,
 			aggregationLabel: cfg.aggregation,
 			onCellClick: isPro(this.plugin)
-				? (row, col) => this.handleDrillDown(row, col)
+				? (row, col) => this.drillDown(row, col)
 				: undefined,
 		});
 	}
@@ -124,7 +112,7 @@ export class PivotView extends BasesView {
 		this.drawBody(next);
 	}
 
-	private handleDrillDown(row: string, col: string): void {
+	private drillDown(row: string, col: string): void {
 		new Notice(`Drill-down: ${row} × ${col} — coming in Pro.`);
 	}
 }

@@ -1,8 +1,3 @@
-/**
- * DOM rendering for the pivot grid.
- * Pure DOM, no framework. Receives a precomputed PivotResult and draws it.
- */
-
 import type { App } from "obsidian";
 import type { PivotResult } from "./compute";
 import type { PivotConfig } from "./options";
@@ -15,9 +10,20 @@ export interface RenderContext {
 	onCellClick?: (row: string, col: string) => void;
 }
 
-function formatNumber(n: number): string {
-	if (Number.isInteger(n)) return n.toString();
-	return n.toFixed(2);
+export interface PropertyChoice {
+	id: string;
+	label: string;
+}
+
+export interface ToolbarHandlers {
+	onRowDimChange: (propId: string | null) => void;
+	onColDimChange: (propId: string | null) => void;
+	onAggregationChange: (agg: string) => void;
+	onValuePropChange: (propId: string | null) => void;
+}
+
+function fmt(n: number): string {
+	return Number.isInteger(n) ? n.toString() : n.toFixed(2);
 }
 
 export function renderPivot(
@@ -30,10 +36,9 @@ export function renderPivot(
 	containerEl.addClass("basecraft-pivot-container");
 
 	if (result.rows.length === 0 || result.cols.length === 0) {
-		const empty = containerEl.createDiv({ cls: "basecraft-pivot-empty" });
-		empty.setText(
-			"No data to pivot. Configure row and column properties in the toolbar above."
-		);
+		containerEl
+			.createDiv({ cls: "basecraft-pivot-empty" })
+			.setText("No data to pivot. Pick row and column properties in the toolbar.");
 		return;
 	}
 
@@ -41,15 +46,13 @@ export function renderPivot(
 	const thead = table.createEl("thead");
 	const tbody = table.createEl("tbody");
 
-	const headerRow = thead.createEl("tr");
-	const corner = headerRow.createEl("th", { cls: "basecraft-pivot-corner" });
-	corner.setText(`${ctx.rowDimLabel} \\ ${ctx.colDimLabel}`);
-
-	for (const c of result.cols) {
-		headerRow.createEl("th").setText(c);
-	}
+	const head = thead.createEl("tr");
+	head.createEl("th", { cls: "basecraft-pivot-corner" }).setText(
+		`${ctx.rowDimLabel} \\ ${ctx.colDimLabel}`
+	);
+	for (const c of result.cols) head.createEl("th").setText(c);
 	if (config.showTotals) {
-		headerRow.createEl("th", { cls: "basecraft-pivot-total" }).setText("Total");
+		head.createEl("th", { cls: "basecraft-pivot-total" }).setText("Total");
 	}
 
 	for (const r of result.rows) {
@@ -59,16 +62,16 @@ export function renderPivot(
 		for (const c of result.cols) {
 			const cell = rowMap?.get(c);
 			const td = tr.createEl("td", { cls: "basecraft-pivot-cell" });
-			const value = cell?.value ?? 0;
-			td.setText(formatNumber(value));
+			td.setText(fmt(cell?.value ?? 0));
 			if (cell && cell.entries.length > 0 && ctx.onCellClick) {
 				td.addClass("basecraft-pivot-cell-clickable");
-				td.onClickEvent(() => ctx.onCellClick && ctx.onCellClick(r, c));
+				td.onClickEvent(() => ctx.onCellClick?.(r, c));
 			}
 		}
 		if (config.showTotals) {
-			const totalTd = tr.createEl("td", { cls: "basecraft-pivot-total" });
-			totalTd.setText(formatNumber(result.rowTotals.get(r) ?? 0));
+			tr.createEl("td", { cls: "basecraft-pivot-total" }).setText(
+				fmt(result.rowTotals.get(r) ?? 0)
+			);
 		}
 	}
 
@@ -78,24 +81,12 @@ export function renderPivot(
 		for (const c of result.cols) {
 			totalTr
 				.createEl("td", { cls: "basecraft-pivot-total" })
-				.setText(formatNumber(result.colTotals.get(c) ?? 0));
+				.setText(fmt(result.colTotals.get(c) ?? 0));
 		}
 		totalTr
 			.createEl("td", { cls: "basecraft-pivot-total" })
-			.setText(formatNumber(result.grandTotal));
+			.setText(fmt(result.grandTotal));
 	}
-}
-
-export interface ToolbarHandlers {
-	onRowDimChange: (propId: string | null) => void;
-	onColDimChange: (propId: string | null) => void;
-	onAggregationChange: (agg: string) => void;
-	onValuePropChange: (propId: string | null) => void;
-}
-
-export interface PropertyChoice {
-	id: string;
-	label: string;
 }
 
 export function renderToolbar(
@@ -108,7 +99,7 @@ export function renderToolbar(
 	containerEl.empty();
 	containerEl.addClass("basecraft-pivot-toolbar");
 
-	const mkSelect = (
+	const select = (
 		labelText: string,
 		current: string | null,
 		options: { value: string; label: string; disabled?: boolean }[],
@@ -135,8 +126,8 @@ export function renderToolbar(
 
 	const propOpts = properties.map((p) => ({ value: p.id, label: p.label }));
 
-	mkSelect("Rows", config.rowDim, propOpts, handlers.onRowDimChange);
-	mkSelect("Columns", config.colDim, propOpts, handlers.onColDimChange);
+	select("Rows", config.rowDim, propOpts, handlers.onRowDimChange);
+	select("Columns", config.colDim, propOpts, handlers.onColDimChange);
 
 	const aggOpts = [
 		{ value: "count", label: "Count" },
@@ -148,13 +139,14 @@ export function renderToolbar(
 		{ value: "distinct", label: isPro ? "Distinct count" : "Distinct — Pro", disabled: !isPro },
 	];
 
-	mkSelect("Aggregation", config.aggregation, aggOpts, (v) =>
+	select("Aggregation", config.aggregation, aggOpts, (v) =>
 		handlers.onAggregationChange(v ?? "count")
 	);
-	mkSelect("Value", config.valueProp, propOpts, handlers.onValuePropChange);
+	select("Value", config.valueProp, propOpts, handlers.onValuePropChange);
 
 	if (!isPro) {
-		const upgrade = containerEl.createDiv({ cls: "basecraft-pivot-upgrade" });
-		upgrade.setText("Unlock advanced aggregations, drill-down, export & more — get Basecraft Pro");
+		containerEl
+			.createDiv({ cls: "basecraft-pivot-upgrade" })
+			.setText("Get Basecraft Pro for advanced aggregations, drill-down, export and more");
 	}
 }

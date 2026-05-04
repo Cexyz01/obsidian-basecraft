@@ -26,32 +26,24 @@ export class BasecraftSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("Pro license key")
-			.setDesc(
-				"Paste the license key you received after purchasing Basecraft Pro. Leave empty to use the free tier."
-			)
+			.setDesc("Paste the key you received after purchasing Basecraft Pro. Leave empty to stay on the free tier.")
 			.addText((text) =>
 				text
 					.setPlaceholder("XXXX-XXXX-XXXX-XXXX")
 					.setValue(this.plugin.settings.license.key ?? "")
 					.onChange(async (value) => {
 						const trimmed = value.trim();
-						this.plugin.settings.license.key = trimmed.length
-							? trimmed
-							: null;
-						// V0.1: trust the key blindly. Real validation against
-						// Lemon Squeezy License API is wired up in a follow-up.
+						this.plugin.settings.license.key = trimmed || null;
 						this.plugin.settings.license.active = trimmed.length > 0;
 						await this.plugin.saveSettings();
 					})
 			);
 
-		const statusEl = containerEl.createEl("p", {
-			cls: "basecraft-settings-status",
-		});
-		statusEl.setText(
+		const status = containerEl.createEl("p", { cls: "basecraft-settings-status" });
+		status.setText(
 			this.plugin.settings.license.active
-				? "Pro: ACTIVE (V0.1 trusts any non-empty key — server validation lands later)"
-				: "Pro: INACTIVE — running in free tier"
+				? "Pro: active"
+				: "Pro: inactive — running on the free tier"
 		);
 	}
 }
