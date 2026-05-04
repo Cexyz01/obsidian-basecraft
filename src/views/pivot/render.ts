@@ -23,6 +23,7 @@ export interface ToolbarHandlers {
 	onPercentModeChange: (mode: PercentMode) => void;
 	onHeatmapToggle: (enabled: boolean) => void;
 	onExportCsv: () => void;
+	onExportXlsx: () => void;
 }
 
 function fmt(n: number): string {
@@ -208,12 +209,19 @@ export function renderToolbar(
 	}
 	heatToggle.addEventListener("click", () => handlers.onHeatmapToggle(!config.heatmap));
 
-	const exportBtn = actions.createEl("button", { cls: "basecraft-pivot-toggle", text: "Export CSV" });
+	const csvBtn = actions.createEl("button", { cls: "basecraft-pivot-toggle", text: "Export CSV" });
 	if (!isPro) {
-		exportBtn.disabled = true;
-		exportBtn.setText("Export — Pro");
+		csvBtn.disabled = true;
+		csvBtn.setText("CSV — Pro");
 	}
-	exportBtn.addEventListener("click", () => handlers.onExportCsv());
+	csvBtn.addEventListener("click", () => handlers.onExportCsv());
+
+	const xlsxBtn = actions.createEl("button", { cls: "basecraft-pivot-toggle", text: "Export Excel" });
+	if (!isPro) {
+		xlsxBtn.disabled = true;
+		xlsxBtn.setText("Excel — Pro");
+	}
+	xlsxBtn.addEventListener("click", () => handlers.onExportXlsx());
 
 	if (!isPro) {
 		containerEl

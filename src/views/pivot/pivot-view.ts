@@ -18,6 +18,7 @@ import { computePivot, type PivotCell } from "./compute";
 import { renderPivot, renderToolbar, type PropertyChoice } from "./render";
 import { DrillDownModal } from "../../lib/drill-down";
 import { downloadFile, pivotToCsv } from "../../lib/csv";
+import { downloadBuffer, pivotToXlsx } from "../../lib/xlsx";
 
 export const PIVOT_VIEW_ID = "basecraft-pivot";
 
@@ -121,6 +122,13 @@ export class PivotView extends BasesView {
 				}
 				this.exportCsv();
 			},
+			onExportXlsx: () => {
+				if (!proActive) {
+					this.notifyProRequired("Excel export");
+					return;
+				}
+				void this.exportXlsx();
+			},
 		});
 	}
 
@@ -177,6 +185,32 @@ export class PivotView extends BasesView {
 		const stamp = new Date().toISOString().slice(0, 10);
 		downloadFile(`basecraft-pivot-${stamp}.csv`, csv, "text/csv");
 		new Notice("Pivot exported to CSV.");
+	}
+
+	private async exportXlsx(): Promise<void> {
+		const cfg = this.currentConfig;
+		if (!cfg) return;
+		try {
+			const entries = this.data?.data ?? [];
+			const result = computePivot(entries, cfg);
+			const rowLabel = cfg.rowDim
+				? this.config.getDisplayName(cfg.rowDim) ?? cfg.rowDim
+				: "Row";
+			const colLabel = cfg.colDim
+				? this.config.getDisplayName(cfg.colDim) ?? cfg.colDim
+				: "Column";
+			const buffer = await pivotToXlsx(result, cfg, rowLabel, colLabel);
+			const stamp = new Date().toISOString().slice(0, 10);
+			downloadBuffer(
+				`basecraft-pivot-${stamp}.xlsx`,
+				buffer,
+				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+			);
+			new Notice("Pivot exported to Excel.");
+		} catch (err) {
+			console.error("Basecraft: Excel export failed", err);
+			new Notice("Excel export failed. Check the developer console.");
+		}
 	}
 
 	private notifyProRequired(feature: string): void {
