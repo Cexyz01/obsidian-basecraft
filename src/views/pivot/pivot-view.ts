@@ -3,6 +3,7 @@ import {
 	Notice,
 	type BasesPropertyId,
 	type QueryController,
+	type TFile,
 } from "obsidian";
 import type BasecraftPlugin from "../../main";
 import { isPro } from "../../license/gate";
@@ -10,10 +11,13 @@ import {
 	loadPivotConfig,
 	type PivotConfig,
 	type PivotAggregation,
+	type PercentMode,
 	isProAggregation,
 } from "./options";
-import { computePivot } from "./compute";
+import { computePivot, type PivotCell } from "./compute";
 import { renderPivot, renderToolbar, type PropertyChoice } from "./render";
+import { DrillDownModal } from "../../lib/drill-down";
+import { downloadFile, pivotToCsv } from "../../lib/csv";
 
 export const PIVOT_VIEW_ID = "basecraft-pivot";
 
@@ -44,17 +48,27 @@ export class PivotView extends BasesView {
 	}
 
 	onDataUpdated(): void {
-		const cfg = loadPivotConfig(this.config);
-		const proActive = isPro(this.plugin);
+		try {
+			const cfg = loadPivotConfig(this.config);
+			const proActive = isPro(this.plugin);
 
-		if (!proActive && isProAggregation(cfg.aggregation)) {
-			cfg.aggregation = "count";
+			if (!proActive) {
+				if (isProAggregation(cfg.aggregation)) cfg.aggregation = "count";
+				if (cfg.percentMode !== "none") cfg.percentMode = "none";
+				if (cfg.heatmap) cfg.heatmap = false;
+			}
+
+			this.currentConfig = cfg;
+			const props = this.collectProperties();
+			this.drawToolbar(cfg, props, proActive);
+			this.drawBody(cfg);
+		} catch (err) {
+			console.error("Basecraft pivot render failed:", err);
+			this.bodyEl.empty();
+			this.bodyEl
+				.createDiv({ cls: "basecraft-pivot-empty" })
+				.setText("Could not render pivot. Check the developer console for details.");
 		}
-
-		this.currentConfig = cfg;
-		const props = this.collectProperties();
-		this.drawToolbar(cfg, props, proActive);
-		this.drawBody(cfg);
 	}
 
 	private collectProperties(): PropertyChoice[] {
@@ -74,12 +88,33 @@ export class PivotView extends BasesView {
 			onAggregationChange: (v) => {
 				const agg = v as PivotAggregation;
 				if (isProAggregation(agg) && !proActive) {
-					new Notice("That aggregation requires Basecraft Pro.");
+					this.notifyProRequired("That aggregation");
 					return;
 				}
 				this.update({ aggregation: agg });
 			},
 			onValuePropChange: (v) => this.update({ valueProp: v as BasesPropertyId | null }),
+			onPercentModeChange: (mode) => {
+				if (mode !== "none" && !proActive) {
+					this.notifyProRequired("Percentage display");
+					return;
+				}
+				this.update({ percentMode: mode });
+			},
+			onHeatmapToggle: (enabled) => {
+				if (enabled && !proActive) {
+					this.notifyProRequired("Heatmap");
+					return;
+				}
+				this.update({ heatmap: enabled });
+			},
+			onExportCsv: () => {
+				if (!proActive) {
+					this.notifyProRequired("CSV export");
+					return;
+				}
+				this.exportCsv();
+			},
 		});
 	}
 
@@ -100,7 +135,7 @@ export class PivotView extends BasesView {
 			colDimLabel,
 			aggregationLabel: cfg.aggregation,
 			onCellClick: isPro(this.plugin)
-				? (row, col) => this.drillDown(row, col)
+				? (row, col, cell) => this.openDrillDown(row, col, cell)
 				: undefined,
 		});
 	}
@@ -108,11 +143,37 @@ export class PivotView extends BasesView {
 	private update(patch: Partial<PivotConfig>): void {
 		const next = { ...(this.currentConfig ?? loadPivotConfig(this.config)), ...patch };
 		this.currentConfig = next;
-		this.config.set("basecraft.pivot", next);
+		try {
+			this.config.set("basecraft.pivot", next);
+		} catch (err) {
+			console.error("Basecraft: failed to persist pivot config", err);
+		}
 		this.drawBody(next);
 	}
 
-	private drillDown(row: string, col: string): void {
-		new Notice(`Drill-down: ${row} × ${col} — coming in Pro.`);
+	private openDrillDown(row: string, col: string, cell: PivotCell): void {
+		const files: TFile[] = cell.entries.map((e) => e.file);
+		new DrillDownModal(this.app, `${row} × ${col} — ${files.length} note(s)`, files).open();
+	}
+
+	private exportCsv(): void {
+		const cfg = this.currentConfig;
+		if (!cfg) return;
+		const entries = this.data?.data ?? [];
+		const result = computePivot(entries, cfg);
+		const rowLabel = cfg.rowDim
+			? this.config.getDisplayName(cfg.rowDim) ?? cfg.rowDim
+			: "Row";
+		const colLabel = cfg.colDim
+			? this.config.getDisplayName(cfg.colDim) ?? cfg.colDim
+			: "Column";
+		const csv = pivotToCsv(result, cfg, rowLabel, colLabel);
+		const stamp = new Date().toISOString().slice(0, 10);
+		downloadFile(`basecraft-pivot-${stamp}.csv`, csv, "text/csv");
+		new Notice("Pivot exported to CSV.");
+	}
+
+	private notifyProRequired(feature: string): void {
+		new Notice(`${feature} requires Basecraft Pro ($14).`);
 	}
 }

@@ -1,11 +1,11 @@
 {
 	"id": "basecraft",
 	"name": "Basecraft",
-	"version": "0.1.0",
-	"minAppVersion": "1.7.0",
-	"description": "Advanced views, formulas and filters for Obsidian Bases. Power-user features for the new core database.",
+	"version": "0.2.0",
+	"minAppVersion": "1.10.0",
+	"description": "Pivot tables for Obsidian Bases. Group rows × columns with count, sum, average and more.",
 	"author": "Hewnpath",
-	"authorUrl": "https://github.com/hewnpath",
+	"authorUrl": "https://github.com/Cexyz01/obsidian-basecraft",
 	"fundingUrl": "https://hewnpath.lemonsqueezy.com",
 	"isDesktopOnly": false
 }

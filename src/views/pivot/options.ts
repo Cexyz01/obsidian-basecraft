@@ -9,14 +9,16 @@ export type PivotAggregation =
 	| "median"
 	| "distinct";
 
+export type PercentMode = "none" | "total" | "row" | "col";
+
 export interface PivotConfig {
 	rowDim: BasesPropertyId | null;
 	colDim: BasesPropertyId | null;
 	aggregation: PivotAggregation;
 	valueProp: BasesPropertyId | null;
 	showTotals: boolean;
-	showPercentage: "none" | "total" | "row" | "col";
-	conditionalFormatting: boolean;
+	percentMode: PercentMode;
+	heatmap: boolean;
 }
 
 export const DEFAULT_PIVOT_CONFIG: PivotConfig = {
@@ -25,8 +27,8 @@ export const DEFAULT_PIVOT_CONFIG: PivotConfig = {
 	aggregation: "count",
 	valueProp: null,
 	showTotals: true,
-	showPercentage: "none",
-	conditionalFormatting: false,
+	percentMode: "none",
+	heatmap: false,
 };
 
 const FREE_AGGS: ReadonlySet<PivotAggregation> = new Set(["count", "sum"]);

@@ -1,13 +1,13 @@
 import type { App } from "obsidian";
-import type { PivotResult } from "./compute";
-import type { PivotConfig } from "./options";
+import type { PivotResult, PivotCell } from "./compute";
+import type { PivotConfig, PercentMode } from "./options";
 
 export interface RenderContext {
 	app: App;
 	rowDimLabel: string;
 	colDimLabel: string;
 	aggregationLabel: string;
-	onCellClick?: (row: string, col: string) => void;
+	onCellClick?: (row: string, col: string, cell: PivotCell) => void;
 }
 
 export interface PropertyChoice {
@@ -20,10 +20,35 @@ export interface ToolbarHandlers {
 	onColDimChange: (propId: string | null) => void;
 	onAggregationChange: (agg: string) => void;
 	onValuePropChange: (propId: string | null) => void;
+	onPercentModeChange: (mode: PercentMode) => void;
+	onHeatmapToggle: (enabled: boolean) => void;
+	onExportCsv: () => void;
 }
 
 function fmt(n: number): string {
 	return Number.isInteger(n) ? n.toString() : n.toFixed(2);
+}
+
+function pct(n: number): string {
+	return `${(n * 100).toFixed(1)}%`;
+}
+
+function cellDisplay(value: number, mode: PercentMode, denom: number): string {
+	if (mode === "none" || denom === 0) return fmt(value);
+	return pct(value / denom);
+}
+
+function findCellRange(result: PivotResult): { min: number; max: number } {
+	let min = Infinity;
+	let max = -Infinity;
+	for (const rowMap of result.cells.values()) {
+		for (const cell of rowMap.values()) {
+			if (cell.value < min) min = cell.value;
+			if (cell.value > max) max = cell.value;
+		}
+	}
+	if (min === Infinity) return { min: 0, max: 0 };
+	return { min, max };
 }
 
 export function renderPivot(
@@ -42,6 +67,9 @@ export function renderPivot(
 		return;
 	}
 
+	const range = config.heatmap ? findCellRange(result) : null;
+	const span = range ? Math.max(range.max - range.min, 1) : 1;
+
 	const table = containerEl.createEl("table", { cls: "basecraft-pivot" });
 	const thead = table.createEl("thead");
 	const tbody = table.createEl("tbody");
@@ -59,19 +87,34 @@ export function renderPivot(
 		const tr = tbody.createEl("tr");
 		tr.createEl("th").setText(r);
 		const rowMap = result.cells.get(r);
+		const rowTotal = result.rowTotals.get(r) ?? 0;
+
 		for (const c of result.cols) {
 			const cell = rowMap?.get(c);
 			const td = tr.createEl("td", { cls: "basecraft-pivot-cell" });
-			td.setText(fmt(cell?.value ?? 0));
+			const value = cell?.value ?? 0;
+
+			let denom = 1;
+			if (config.percentMode === "total") denom = result.grandTotal;
+			else if (config.percentMode === "row") denom = rowTotal;
+			else if (config.percentMode === "col") denom = result.colTotals.get(c) ?? 0;
+
+			td.setText(cellDisplay(value, config.percentMode, denom));
+
+			if (config.heatmap && range) {
+				const t = (value - range.min) / span;
+				td.style.setProperty("--basecraft-heat", t.toFixed(3));
+				td.addClass("basecraft-pivot-heat");
+			}
+
 			if (cell && cell.entries.length > 0 && ctx.onCellClick) {
 				td.addClass("basecraft-pivot-cell-clickable");
-				td.onClickEvent(() => ctx.onCellClick?.(r, c));
+				td.onClickEvent(() => ctx.onCellClick?.(r, c, cell));
 			}
 		}
+
 		if (config.showTotals) {
-			tr.createEl("td", { cls: "basecraft-pivot-total" }).setText(
-				fmt(result.rowTotals.get(r) ?? 0)
-			);
+			tr.createEl("td", { cls: "basecraft-pivot-total" }).setText(fmt(rowTotal));
 		}
 	}
 
@@ -138,15 +181,43 @@ export function renderToolbar(
 		{ value: "median", label: isPro ? "Median" : "Median — Pro", disabled: !isPro },
 		{ value: "distinct", label: isPro ? "Distinct count" : "Distinct — Pro", disabled: !isPro },
 	];
-
 	select("Aggregation", config.aggregation, aggOpts, (v) =>
 		handlers.onAggregationChange(v ?? "count")
 	);
 	select("Value", config.valueProp, propOpts, handlers.onValuePropChange);
 
+	const pctOpts = [
+		{ value: "none", label: "Raw values" },
+		{ value: "total", label: isPro ? "% of total" : "% of total — Pro", disabled: !isPro },
+		{ value: "row", label: isPro ? "% of row" : "% of row — Pro", disabled: !isPro },
+		{ value: "col", label: isPro ? "% of column" : "% of column — Pro", disabled: !isPro },
+	];
+	select("Display", config.percentMode, pctOpts, (v) =>
+		handlers.onPercentModeChange((v ?? "none") as PercentMode)
+	);
+
+	const actions = containerEl.createDiv({ cls: "basecraft-pivot-toolbar-actions" });
+
+	const heatToggle = actions.createEl("button", {
+		cls: "basecraft-pivot-toggle",
+		text: config.heatmap ? "Heatmap: on" : "Heatmap: off",
+	});
+	if (!isPro) {
+		heatToggle.disabled = true;
+		heatToggle.setText("Heatmap — Pro");
+	}
+	heatToggle.addEventListener("click", () => handlers.onHeatmapToggle(!config.heatmap));
+
+	const exportBtn = actions.createEl("button", { cls: "basecraft-pivot-toggle", text: "Export CSV" });
+	if (!isPro) {
+		exportBtn.disabled = true;
+		exportBtn.setText("Export — Pro");
+	}
+	exportBtn.addEventListener("click", () => handlers.onExportCsv());
+
 	if (!isPro) {
 		containerEl
 			.createDiv({ cls: "basecraft-pivot-upgrade" })
-			.setText("Get Basecraft Pro for advanced aggregations, drill-down, export and more");
+			.setText("Get Basecraft Pro — $14 one-time — for advanced aggregations, drill-down, heatmap, percentages and export");
 	}
 }
