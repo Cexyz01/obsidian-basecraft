@@ -1,8 +1,123 @@
-/*
+.basecraft-view {
+	padding: 8px 12px;
+	overflow: auto;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.basecraft-pivot-toolbar-wrapper {
+	margin-bottom: 12px;
+}
 
-If your plugin does not need CSS, delete this file.
+.basecraft-pivot-toolbar {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	padding: 8px;
+	background: var(--background-secondary);
+	border-radius: 6px;
+}
 
-*/
+.basecraft-pivot-toolbar-item {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 140px;
+}
+
+.basecraft-pivot-toolbar-item label {
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--text-muted);
+}
+
+.basecraft-pivot-toolbar-item select {
+	background: var(--background-primary);
+	color: var(--text-normal);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 4px;
+	padding: 4px 6px;
+}
+
+.basecraft-pivot-upgrade {
+	margin-left: auto;
+	padding: 6px 10px;
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	border-radius: 4px;
+	font-size: 12px;
+}
+
+.basecraft-pivot-container {
+	overflow: auto;
+}
+
+.basecraft-pivot-empty {
+	color: var(--text-muted);
+	font-style: italic;
+	padding: 24px;
+	text-align: center;
+}
+
+table.basecraft-pivot {
+	border-collapse: collapse;
+	width: max-content;
+	min-width: 100%;
+}
+
+table.basecraft-pivot th,
+table.basecraft-pivot td {
+	border: 1px solid var(--background-modifier-border);
+	padding: 6px 10px;
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+
+table.basecraft-pivot thead th {
+	background: var(--background-secondary);
+	font-weight: 600;
+	text-align: center;
+	position: sticky;
+	top: 0;
+	z-index: 1;
+}
+
+table.basecraft-pivot tbody th {
+	text-align: left;
+	font-weight: 500;
+	background: var(--background-secondary-alt);
+	position: sticky;
+	left: 0;
+	z-index: 1;
+}
+
+table.basecraft-pivot .basecraft-pivot-corner {
+	background: var(--background-secondary);
+	color: var(--text-muted);
+	font-weight: 500;
+	z-index: 2;
+}
+
+table.basecraft-pivot .basecraft-pivot-total {
+	background: var(--background-modifier-hover);
+	font-weight: 600;
+}
+
+table.basecraft-pivot .basecraft-pivot-total-row th,
+table.basecraft-pivot .basecraft-pivot-total-row td {
+	background: var(--background-modifier-hover);
+	font-weight: 600;
+}
+
+table.basecraft-pivot .basecraft-pivot-cell-clickable {
+	cursor: pointer;
+}
+
+table.basecraft-pivot .basecraft-pivot-cell-clickable:hover {
+	background: var(--background-modifier-hover);
+}
+
+.basecraft-settings-status {
+	font-size: 12px;
+	color: var(--text-muted);
+}
