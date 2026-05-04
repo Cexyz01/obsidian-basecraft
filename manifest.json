@@ -1,0 +1,11 @@
+{
+	"id": "basecraft",
+	"name": "Basecraft",
+	"version": "0.1.0",
+	"minAppVersion": "1.7.0",
+	"description": "Advanced views, formulas and filters for Obsidian Bases. Power-user features for the new core database.",
+	"author": "Hewnpath",
+	"authorUrl": "https://github.com/hewnpath",
+	"fundingUrl": "https://hewnpath.lemonsqueezy.com",
+	"isDesktopOnly": false
+}
