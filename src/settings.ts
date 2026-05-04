@@ -36,6 +36,8 @@ export class BasecraftSettingTab extends PluginSettingTab {
 						this.plugin.settings.license.key = trimmed || null;
 						this.plugin.settings.license.active = trimmed.length > 0;
 						await this.plugin.saveSettings();
+						this.plugin.refreshActiveViews();
+						this.display();
 					})
 			);
 

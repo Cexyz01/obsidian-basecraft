@@ -8,6 +8,19 @@ import { PivotView, PIVOT_VIEW_ID } from "./views/pivot/pivot-view";
 
 export default class BasecraftPlugin extends Plugin {
 	settings!: BasecraftSettings;
+	private activeViews = new Set<PivotView>();
+
+	registerActiveView(view: PivotView): void {
+		this.activeViews.add(view);
+	}
+
+	unregisterActiveView(view: PivotView): void {
+		this.activeViews.delete(view);
+	}
+
+	refreshActiveViews(): void {
+		for (const view of this.activeViews) view.refresh();
+	}
 
 	async onload(): Promise<void> {
 		await this.loadSettings();

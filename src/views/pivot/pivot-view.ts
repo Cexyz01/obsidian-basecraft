@@ -41,10 +41,16 @@ export class PivotView extends BasesView {
 		this.hostEl.addClass("basecraft-view");
 		this.toolbarEl = this.hostEl.createDiv({ cls: "basecraft-pivot-toolbar-wrapper" });
 		this.bodyEl = this.hostEl.createDiv({ cls: "basecraft-pivot-body" });
+		this.plugin.registerActiveView(this);
 	}
 
 	onunload(): void {
+		this.plugin.unregisterActiveView(this);
 		this.hostEl.empty();
+	}
+
+	refresh(): void {
+		this.onDataUpdated();
 	}
 
 	onDataUpdated(): void {
