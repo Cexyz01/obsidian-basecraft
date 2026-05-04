@@ -26,6 +26,10 @@ function neutralize(label: string): string {
 	return label;
 }
 
+function round2(n: number): number {
+	return Math.round(n * 100) / 100;
+}
+
 function findRange(result: PivotResult): { min: number; max: number } {
 	let min = Infinity;
 	let max = -Infinity;
@@ -92,17 +96,17 @@ export async function pivotToXlsx(
 				);
 				rowValues.push(denom === 0 ? 0 : value / denom);
 			} else {
-				rowValues.push(value);
+				rowValues.push(round2(value));
 			}
 		}
-		if (config.showTotals) rowValues.push(rowTotal);
+		if (config.showTotals) rowValues.push(round2(rowTotal));
 		sheet.addRow(rowValues);
 	}
 
 	if (config.showTotals) {
 		const totalsRow: (string | number)[] = ["Total"];
-		for (const c of result.cols) totalsRow.push(result.colTotals.get(c) ?? 0);
-		totalsRow.push(result.grandTotal);
+		for (const c of result.cols) totalsRow.push(round2(result.colTotals.get(c) ?? 0));
+		totalsRow.push(round2(result.grandTotal));
 		sheet.addRow(totalsRow);
 	}
 
@@ -143,8 +147,6 @@ export async function pivotToXlsx(
 
 			if (isPercent && !isTotalRow && !isTotalCol) {
 				cell.numFmt = "0.0%";
-			} else {
-				cell.numFmt = "0.##";
 			}
 
 			cell.alignment = { horizontal: "right" };
