@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-basecraft",
-	"version": "0.4.1",
+	"version": "0.4.2",
 	"description": "Advanced views, formulas and filters for Obsidian Bases.",
 	"main": "main.js",
 	"type": "module",
@@ -31,7 +31,7 @@
 		"typescript-eslint": "8.35.1"
 	},
 	"dependencies": {
-		"exceljs": "^4.4.0",
+		"fflate": "^0.8.3",
 		"obsidian": "latest"
 	}
 }
