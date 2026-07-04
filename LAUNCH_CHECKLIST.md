@@ -2,7 +2,7 @@
 
 Code, release, and catalog branch are done. Three account-gated steps remain.
 
-## 1. Submit via the community portal (~5 minutes)
+## 1. Submit via the community portal — DONE 2026-07-04
 
 Obsidian no longer accepts PRs to `obsidian-releases` (the repo has pull
 requests disabled — verified 2026-07-04). Submission now goes through their
