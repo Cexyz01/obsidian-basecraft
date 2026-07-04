@@ -22,6 +22,14 @@ export default tseslint.config(
 		},
 	},
 	...obsidianmd.configs.recommended,
+	{
+		rules: {
+			"obsidianmd/ui/sentence-case": ["error", {
+				brands: ["Basecraft", "Hewnpath", "Obsidian", "Bases", "Pro", "Excel", "CSV"],
+				ignoreRegex: ["^X{4}(-X{4})*$"],
+			}],
+		},
+	},
 	globalIgnores([
 		"node_modules",
 		"dist",

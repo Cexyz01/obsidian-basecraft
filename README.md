@@ -18,10 +18,10 @@ Basecraft adds a Pivot view to any `.base` file. Pick a row property, a column p
 - Drill-down: click a cell to see and open the matching notes
 - Heatmap conditional formatting
 - Show values as `% of total`, `% of row`, or `% of column`
-- Export the pivot to CSV
+- Export the pivot to CSV or Excel
 - Future Pro additions ship as free updates
 
-A license activates on up to 3 devices and never expires.
+A license activates on up to 3 devices and never expires. Get a key at [hewnpath.com](https://hewnpath.com).
 
 ## Install
 
@@ -46,7 +46,7 @@ That's it. The toolbar shows what's locked behind Pro and what's free.
 
 ## Status
 
-V0.2 — drill-down, heatmap, percentages and CSV export now work. Multi-dimensional rows/columns and PNG export are next.
+V0.4 — license activation is live (Polar), drill-down, heatmap, percentages and CSV/Excel export all work. Multi-dimensional rows/columns and PNG export are next.
 
 ## Built by Hewnpath
 

@@ -1,6 +1,7 @@
 import type { App } from "obsidian";
 import type { PivotResult, PivotCell } from "./compute";
 import type { PivotConfig, PercentMode } from "./options";
+import { BUY_URL } from "../../license/gate";
 
 export interface RenderContext {
 	app: App;
@@ -224,8 +225,11 @@ export function renderToolbar(
 	xlsxBtn.addEventListener("click", () => handlers.onExportXlsx());
 
 	if (!isPro) {
-		containerEl
-			.createDiv({ cls: "basecraft-pivot-upgrade" })
-			.setText("Get Basecraft Pro — $14 one-time — for advanced aggregations, drill-down, heatmap, percentages and export");
+		const upgrade = containerEl.createDiv({ cls: "basecraft-pivot-upgrade" });
+		upgrade.createEl("a", {
+			text: "Get Basecraft Pro — $14 one-time",
+			href: BUY_URL,
+		});
+		upgrade.appendText(" — advanced aggregations, drill-down, heatmap, percentages and export");
 	}
 }

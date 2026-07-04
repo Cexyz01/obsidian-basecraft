@@ -1,4 +1,4 @@
-from reportlab.lib.pagesizes import A4
+﻿from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import cm, mm
 from reportlab.lib.colors import HexColor, Color
@@ -187,7 +187,7 @@ def sales_sheet():
     label_w = stringWidth("HEWNPATH", BOLD, 8.5)
     c.setFillColor(SUBTLE)
     c.setFont(REGULAR, 8.5)
-    c.drawString(margin_l + label_w + 0.25 * cm, y, "·  A FOCUSED UTILITY")
+    c.drawString(margin_l + label_w + 0.25 * cm, y, "Â·  A FOCUSED UTILITY")
 
     y = page_h - 4.0 * cm
     c.setFillColor(INK)
@@ -202,7 +202,7 @@ def sales_sheet():
     y -= 0.9 * cm
     c.setFillColor(SUBTLE)
     c.setFont(ITALIC, 10.5)
-    c.drawString(margin_l, y, "Group, summarize and explore your vault — without leaving Obsidian.")
+    c.drawString(margin_l, y, "Group, summarize and explore your vault â€” without leaving Obsidian.")
 
     chip_w = 4.6 * cm
     chip_h = 3.0 * cm
@@ -226,7 +226,7 @@ def sales_sheet():
 
     c.setFillColor(SUBTLE)
     c.setFont(REGULAR, 7.5)
-    c.drawString(chip_x + 0.55 * cm, chip_y + 0.45 * cm, "3 devices · lifetime updates")
+    c.drawString(chip_x + 0.55 * cm, chip_y + 0.45 * cm, "3 devices Â· lifetime updates")
 
     rule_y = page_h - 7.9 * cm
     c.setStrokeColor(RULE)
@@ -241,7 +241,7 @@ def sales_sheet():
 
     c.setFillColor(SUBTLE)
     c.setFont(ITALIC, 8.5)
-    caption = "Sample pivot — status × priority with heatmap"
+    caption = "Sample pivot â€” status Ã— priority with heatmap"
     cw = stringWidth(caption, ITALIC, 8.5)
     c.drawString(margin_l + (content_w - cw) / 2, mock_y - 0.55 * cm, caption)
 
@@ -280,11 +280,11 @@ def sales_sheet():
 
     c.setFillColor(SUBTLE)
     c.setFont(BOLD, 8.5)
-    c.drawString(margin_l, cta_h - 1.0 * cm, "ONE-TIME  ·  THREE DEVICES  ·  LIFETIME UPDATES")
+    c.drawString(margin_l, cta_h - 1.0 * cm, "ONE-TIME  Â·  THREE DEVICES  Â·  LIFETIME UPDATES")
 
     c.setFillColor(WHITE)
     c.setFont(BOLD, 22)
-    c.drawString(margin_l, cta_h - 2.45 * cm, "Buy at hewnpath.lemonsqueezy.com")
+    c.drawString(margin_l, cta_h - 2.45 * cm, "Buy at hewnpath.com")
 
     c.setStrokeColor(HexColor("#3A2D6B"))
     c.setLineWidth(0.5)
@@ -292,7 +292,7 @@ def sales_sheet():
 
     c.setFillColor(SUBTLE)
     c.setFont(ITALIC, 9)
-    c.drawString(margin_l, 0.55 * cm, "Hewnpath — focused utilities for the software you use every day.")
+    c.drawString(margin_l, 0.55 * cm, "Hewnpath â€” focused utilities for the software you use every day.")
 
     c.setFillColor(SUBTLE)
     c.setFont(REGULAR, 8)
@@ -408,7 +408,7 @@ def manual_cover(canv, doc):
     canv.drawString(2.4 * cm, page_h - 1.6 * cm, "HEWNPATH")
     label_w = stringWidth("HEWNPATH", BOLD, 8.5)
     canv.setFont(REGULAR, 8.5)
-    canv.drawString(2.4 * cm + label_w + 0.25 * cm, page_h - 1.6 * cm, "·  USER MANUAL")
+    canv.drawString(2.4 * cm + label_w + 0.25 * cm, page_h - 1.6 * cm, "Â·  USER MANUAL")
 
     # Title block
     canv.setFillColor(INK)
@@ -421,7 +421,7 @@ def manual_cover(canv, doc):
 
     canv.setFillColor(SUBTLE)
     canv.setFont(ITALIC, 10.5)
-    canv.drawString(2.4 * cm, page_h - 8.1 * cm, "Pivot tables for Obsidian Bases — Pro features, install, troubleshooting.")
+    canv.drawString(2.4 * cm, page_h - 8.1 * cm, "Pivot tables for Obsidian Bases â€” Pro features, install, troubleshooting.")
 
     # Divider
     canv.setStrokeColor(RULE)
@@ -438,7 +438,7 @@ def manual_cover(canv, doc):
     # Caption
     canv.setFillColor(SUBTLE)
     canv.setFont(ITALIC, 8.5)
-    caption = "What a pivot view looks like — status × priority with heatmap."
+    caption = "What a pivot view looks like â€” status Ã— priority with heatmap."
     cw = stringWidth(caption, ITALIC, 8.5)
     canv.drawString(2.4 * cm + ((page_w - 4.8 * cm) - cw) / 2, mock_y - 0.55 * cm, caption)
 
@@ -453,7 +453,7 @@ def manual_cover(canv, doc):
 
     canv.setFillColor(MUTED)
     canv.setFont(REGULAR, 10)
-    canv.drawString(2.4 * cm, meta_y + 0.55 * cm, "By Hewnpath  ·  github.com/Cexyz01/obsidian-basecraft")
+    canv.drawString(2.4 * cm, meta_y + 0.55 * cm, "By Hewnpath  Â·  github.com/Cexyz01/obsidian-basecraft")
 
     # CTA-like band at very bottom
     band_h = 1.6 * cm
@@ -462,11 +462,11 @@ def manual_cover(canv, doc):
 
     canv.setFillColor(WHITE)
     canv.setFont(BOLD, 11)
-    canv.drawString(2.4 * cm, band_h - 0.6 * cm, "Get Pro at hewnpath.lemonsqueezy.com")
+    canv.drawString(2.4 * cm, band_h - 0.6 * cm, "Get Pro at hewnpath.com")
 
     canv.setFillColor(SUBTLE)
     canv.setFont(REGULAR, 8.5)
-    canv.drawString(2.4 * cm, 0.45 * cm, "$14 one-time  ·  3 devices  ·  lifetime updates")
+    canv.drawString(2.4 * cm, 0.45 * cm, "$14 one-time  Â·  3 devices  Â·  lifetime updates")
 
 
 def manual_page(canv, doc):
@@ -478,7 +478,7 @@ def manual_page(canv, doc):
     # Top header
     canv.setFillColor(SUBTLE)
     canv.setFont(BOLD, 7.5)
-    canv.drawString(2.4 * cm, page_h - 1.3 * cm, "BASECRAFT  ·  USER MANUAL")
+    canv.drawString(2.4 * cm, page_h - 1.3 * cm, "BASECRAFT  Â·  USER MANUAL")
     canv.setFillColor(SUBTLE)
     canv.setFont(REGULAR, 7.5)
     canv.drawRightString(page_w - 2.4 * cm, page_h - 1.3 * cm, "v0.3.2")
@@ -493,7 +493,7 @@ def manual_page(canv, doc):
 
     canv.setFillColor(SUBTLE)
     canv.setFont(REGULAR, 8)
-    canv.drawString(2.4 * cm, 1.05 * cm, "Hewnpath · focused utilities")
+    canv.drawString(2.4 * cm, 1.05 * cm, "Hewnpath Â· focused utilities")
     canv.drawRightString(page_w - 2.4 * cm, 1.05 * cm, f"Page {doc.page}")
 
 
@@ -535,7 +535,7 @@ def manual():
     story.append(Paragraph(
         "Basecraft adds a Pivot view to <b>Obsidian Bases</b>. Pick one property "
         "as rows, another as columns, choose an aggregation, and your entries "
-        "are grouped into a cross-table — like a spreadsheet pivot, but native "
+        "are grouped into a cross-table â€” like a spreadsheet pivot, but native "
         "to your vault.",
         intro,
     ))
@@ -552,7 +552,7 @@ def manual():
     story.append(Paragraph("From the community store", h2))
     story.append(Paragraph(
         "Coming soon. Once Basecraft is approved, install it from "
-        "<b>Settings → Community plugins → Browse</b> and search for "
+        "<b>Settings â†’ Community plugins â†’ Browse</b> and search for "
         "<i>Basecraft</i>.",
         body,
     ))
@@ -564,7 +564,7 @@ def manual():
     story.append(Spacer(1, 0.05 * cm))
     story.append(CodeLine("<your-vault>/.obsidian/plugins/basecraft/", width))
     story.append(Spacer(1, 0.2 * cm))
-    story.append(NumberedStep(3, "Open Settings → Community plugins, enable community plugins, then toggle Basecraft on.", width))
+    story.append(NumberedStep(3, "Open Settings â†’ Community plugins, enable community plugins, then toggle Basecraft on.", width))
     story.append(Spacer(1, 0.15 * cm))
     story.append(NumberedStep(4, "Confirm Bases is enabled in Core plugins. Reload Obsidian if you just enabled it.", width))
     story.append(Spacer(1, 0.4 * cm))
@@ -623,7 +623,7 @@ def manual():
         ("Percentages", "Show values as % of total, % of row, or % of column. Useful for distribution analysis."),
         ("Advanced aggregations", "Average, Min, Max, Median and Distinct count, in addition to free Count and Sum."),
         ("CSV export", "Save the pivot as a CSV file. Excel-friendly: opens with proper columns in any locale."),
-        ("Excel export", "Save a styled .xlsx — header in accent color, heatmap fills, totals preserved, frozen first row and column."),
+        ("Excel export", "Save a styled .xlsx â€” header in accent color, heatmap fills, totals preserved, frozen first row and column."),
         ("Future Pro additions", "Multi-dimensional rows / columns and PNG export are next, included in your purchase."),
     ]
     for name, desc in pro_items:
@@ -636,7 +636,7 @@ def manual():
     story.append(SectionDivider("Activate Pro", width))
     story.append(Paragraph(
         "After your purchase you receive a license key by email. Open Obsidian, "
-        "go to <b>Settings → Basecraft</b>, and paste the key into the "
+        "go to <b>Settings â†’ Basecraft</b>, and paste the key into the "
         "<b>Pro license key</b> field. The toolbar switches from gated to unlocked, "
         "and the status line under the field reads <b>Pro: active</b>.",
         body,
@@ -644,7 +644,7 @@ def manual():
     story.append(TipCallout(
         "Note",
         "A single license activates on up to three devices. To free a slot, "
-        "open Settings → Basecraft on the device you want to remove and "
+        "open Settings â†’ Basecraft on the device you want to remove and "
         "clear the license key.",
         width,
     ))

@@ -175,7 +175,7 @@ export async function pivotToXlsx(
 	for (let r = 2; r <= totalRowsRendered; r++) {
 		for (let c = 1; c <= totalCols; c++) {
 			const v = sheet.getRow(r).getCell(c).value;
-			const len = String(v ?? "").length;
+			const len = typeof v === "string" || typeof v === "number" ? String(v).length : 0;
 			if (len > (lengths[c - 1] ?? 0)) lengths[c - 1] = len;
 		}
 	}

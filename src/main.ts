@@ -5,6 +5,7 @@ import {
 	type BasecraftSettings,
 } from "./settings";
 import { PivotView, PIVOT_VIEW_ID } from "./views/pivot/pivot-view";
+import { revalidateIfStale } from "./license/gate";
 
 export default class BasecraftPlugin extends Plugin {
 	settings!: BasecraftSettings;
@@ -34,8 +35,12 @@ export default class BasecraftPlugin extends Plugin {
 		});
 
 		if (!ok) {
-			new Notice("Basecraft: failed to register the Pivot view. Make sure the Bases core plugin is enabled.");
+			new Notice("Basecraft: failed to register the pivot view. Make sure the Bases core plugin is enabled.");
 		}
+
+		this.app.workspace.onLayoutReady(() => {
+			void revalidateIfStale(this);
+		});
 	}
 
 	async loadSettings(): Promise<void> {

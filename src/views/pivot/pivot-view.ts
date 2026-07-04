@@ -11,7 +11,6 @@ import {
 	loadPivotConfig,
 	type PivotConfig,
 	type PivotAggregation,
-	type PercentMode,
 	isProAggregation,
 } from "./options";
 import { computePivot, type PivotCell } from "./compute";

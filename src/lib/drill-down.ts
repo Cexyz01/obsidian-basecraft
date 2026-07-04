@@ -22,7 +22,7 @@ export class DrillDownModal extends Modal {
 			const link = item.createEl("a", { text: file.basename, cls: "basecraft-drilldown-link" });
 			link.addEventListener("click", (e) => {
 				e.preventDefault();
-				this.app.workspace.openLinkText(file.path, "", false);
+				void this.app.workspace.openLinkText(file.path, "", false);
 				this.close();
 			});
 		}

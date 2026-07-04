@@ -1,11 +1,11 @@
 {
 	"id": "basecraft",
 	"name": "Basecraft",
-	"version": "0.3.2",
+	"version": "0.4.0",
 	"minAppVersion": "1.10.0",
-	"description": "Pivot tables for Obsidian Bases. Group rows × columns with count, sum, average and more.",
+	"description": "Pivot tables for Bases. Group rows × columns with count, sum, average and more.",
 	"author": "Hewnpath",
 	"authorUrl": "https://github.com/Cexyz01/obsidian-basecraft",
-	"fundingUrl": "https://hewnpath.lemonsqueezy.com",
+	"fundingUrl": "https://hewnpath.com",
 	"isDesktopOnly": false
 }
