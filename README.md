@@ -1,10 +1,12 @@
 # Basecraft
 
-Advanced pivot tables for [Obsidian Bases](https://help.obsidian.md/bases).
+Pivot tables for [Obsidian Bases](https://help.obsidian.md/bases).
 
 ## What it does
 
-Basecraft adds a Pivot view to any `.base` file. Pick a row property, a column property and an aggregation, and your entries are grouped into a cross-table — like a spreadsheet pivot, but native to your vault.
+Bases can list and filter your notes; it can't cross-tabulate them. Basecraft adds a Pivot view to any `.base` file: pick a row property, a column property, an aggregation, and you get a spreadsheet-style cross-table built from your own notes.
+
+Say your reading notes have `author` and `year` properties. Rows = author, columns = year, aggregation = count: now you can see you read eleven books in 2024 and nine of them were by two authors. Same trick works for expenses by category × month, workouts by type × week, papers by topic × status.
 
 ## Free
 
@@ -50,4 +52,4 @@ V0.4 — license activation is live (Polar), drill-down, heatmap, percentages an
 
 ## Built by Hewnpath
 
-Hewnpath builds focused utilities for software you use every day.
+One-person studio. Basecraft is the Obsidian sibling of HewnFrame (Figma) and HewnFlow (Webflow) — small tools that do one job and put a number on it. More at [hewnpath.com](https://hewnpath.com).
