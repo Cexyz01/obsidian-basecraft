@@ -29,9 +29,9 @@ A license activates on up to 3 devices and never expires. Get a key at [hewnpath
 
 ### From the community store
 
-Coming soon — Basecraft is on its way to the Obsidian community plugins list.
+In Obsidian, open **Settings → Community plugins → Browse**, search for "Basecraft", install and enable it.
 
-### Manually (for now)
+### Manually
 
 1. Download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/Cexyz01/obsidian-basecraft/releases).
 2. Place them inside `<your-vault>/.obsidian/plugins/basecraft/`.
