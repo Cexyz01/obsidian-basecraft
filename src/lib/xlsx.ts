@@ -13,7 +13,7 @@ const HEAT_BASE = { r: 0x6e, g: 0x4f, b: 0xe6 };
 function heatColor(t: number): string {
 	const clamped = Math.max(0, Math.min(1, t));
 	const start = { r: 255, g: 255, b: 255 };
-	const hex = (n: number) => n.toString(16).padStart(2, "0").toUpperCase();
+	const hex = (n: number) => ("0" + n.toString(16)).slice(-2).toUpperCase();
 	const r = Math.round(start.r + (HEAT_BASE.r - start.r) * clamped * 0.85);
 	const g = Math.round(start.g + (HEAT_BASE.g - start.g) * clamped * 0.85);
 	const b = Math.round(start.b + (HEAT_BASE.b - start.b) * clamped * 0.85);
