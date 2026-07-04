@@ -2,21 +2,30 @@
 
 Code, release, and catalog branch are done. Three account-gated steps remain.
 
-## 1. Open the catalog PR (30 seconds)
+## 1. Submit via the community portal (~5 minutes)
 
-The branch `add-basecraft` with the `community-plugins.json` entry is already
-pushed to the fork. The API refuses PR creation on the obsidianmd org from
-CLI tokens, so open it from the browser while logged in as Cexyz01:
+Obsidian no longer accepts PRs to `obsidian-releases` (the repo has pull
+requests disabled — verified 2026-07-04). Submission now goes through their
+portal:
 
-1. Go to <https://github.com/obsidianmd/obsidian-releases/compare/master...Cexyz01:obsidian-releases:add-basecraft>
-2. Create pull request → title `Add plugin: Basecraft`
-3. Fill the plugin template checkboxes (all apply: release 0.4.0 has
-   `main.js` + `manifest.json` + `styles.css`, tag matches manifest, tested
-   on Windows, LICENSE present).
-4. Note the freemium disclosure: free tier fully works; Pro is an optional
-   one-time key, disclosed in README and UI.
+1. Go to <https://community.obsidian.md> and sign in with your Obsidian
+   account (create one if needed).
+2. Link the GitHub account **Cexyz01** to verify repo ownership.
+3. **Plugins → New plugin** → repository URL
+   `https://github.com/Cexyz01/obsidian-basecraft`
+4. Agree to the developer policies → **Submit**.
 
-Review queue is measured in weeks — submit before anything else.
+Everything the portal checks is already in place: release `0.4.0` with
+`main.js` + `manifest.json` + `styles.css`, README, LICENSE, manifest at
+HEAD of `main`, id without "obsidian". If the automated review asks for
+changes, fix in-repo and publish a bumped release.
+
+The freemium angle is disclosed in README and UI: free tier fully works,
+Pro is an optional one-time key.
+
+Review queue is measured in weeks — submit before anything else. (The old
+`add-basecraft` branch on the obsidian-releases fork is obsolete; delete
+the fork whenever.)
 
 ## 2. Polar product (~5 min)
 
