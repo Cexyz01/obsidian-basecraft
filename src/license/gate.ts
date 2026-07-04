@@ -1,7 +1,7 @@
 import type BasecraftPlugin from "../main";
 import { validateKey } from "./client";
 
-export const BUY_URL = "https://hewnpath.com";
+export const BUY_URL = "https://buy.polar.sh/polar_cl_p00Qh7LtQxoRMLTm4AC4TtsdvWLcDwL8CB8zS0yW18Z";
 
 // Re-check against Polar every 3 days; if the server is unreachable, keep Pro
 // unlocked for up to 30 days since the last successful validation.

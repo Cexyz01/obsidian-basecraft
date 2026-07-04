@@ -1,7 +1,7 @@
 {
 	"id": "basecraft",
 	"name": "Basecraft",
-	"version": "0.4.3",
+	"version": "0.4.4",
 	"minAppVersion": "1.10.0",
 	"description": "Pivot tables for Bases. Group rows × columns with count, sum, average and more.",
 	"author": "Hewnpath",

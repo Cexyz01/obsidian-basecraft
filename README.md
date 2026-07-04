@@ -23,7 +23,7 @@ Say your reading notes have `author` and `year` properties. Rows = author, colum
 - Export the pivot to CSV or Excel
 - Future Pro additions ship as free updates
 
-A license activates on up to 3 devices and never expires. Get a key at [hewnpath.com](https://hewnpath.com).
+A license activates on up to 3 devices and never expires. [Get a key here](https://buy.polar.sh/polar_cl_p00Qh7LtQxoRMLTm4AC4TtsdvWLcDwL8CB8zS0yW18Z) ($14, one-time, via Polar).
 
 ## Install
 
