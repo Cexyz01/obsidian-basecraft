@@ -1,5 +1,5 @@
 // Polar customer-portal license client. These endpoints are unauthenticated
-// by design — safe to call from a desktop plugin.
+// by design; safe to call from a desktop plugin.
 // https://polar.sh/docs/api-reference/customer-portal/license-keys
 
 import { requestUrl } from "obsidian";
@@ -40,7 +40,7 @@ export async function activateKey(key: string, label: string): Promise<ActivateR
 			return { valid: true, activationId: id };
 		}
 		if (res.status === 403) {
-			return { valid: false, message: "Activation limit reached — deactivate Basecraft on another device first." };
+			return { valid: false, message: "Activation limit reached. Deactivate Basecraft on another device first." };
 		}
 		if (res.status === 404) {
 			return { valid: false, message: "License key not found. Check for typos." };

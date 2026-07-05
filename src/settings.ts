@@ -32,7 +32,7 @@ export class BasecraftSettingTab extends PluginSettingTab {
 		if (license.active && license.key) {
 			new Setting(containerEl)
 				.setName("Pro license")
-				.setDesc(`Active — key ending in …${license.key.slice(-4)}`)
+				.setDesc(`Active: key ending in …${license.key.slice(-4)}`)
 				.addButton((btn) =>
 					btn
 						.setButtonText("Deactivate")
@@ -61,7 +61,7 @@ export class BasecraftSettingTab extends PluginSettingTab {
 
 			const buy = containerEl.createEl("p", { cls: "basecraft-settings-status" });
 			buy.appendText("No key yet? ");
-			buy.createEl("a", { text: "Get Basecraft Pro — $14 one-time", href: BUY_URL });
+			buy.createEl("a", { text: "Get Basecraft Pro ($14 one-time)", href: BUY_URL });
 		}
 	}
 
@@ -71,7 +71,7 @@ export class BasecraftSettingTab extends PluginSettingTab {
 			return;
 		}
 		this.busy = true;
-		const result = await activateKey(this.keyInput, `Obsidian — ${this.app.vault.getName()}`);
+		const result = await activateKey(this.keyInput, `Obsidian / ${this.app.vault.getName()}`);
 		this.busy = false;
 
 		if (!result.valid) {

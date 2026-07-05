@@ -1,11 +1,11 @@
-# Launch checklist — actions that need your accounts
+# Launch checklist, actions that need your accounts
 
 Code, release, and catalog branch are done. Three account-gated steps remain.
 
-## 1. Submit via the community portal — DONE 2026-07-04
+## 1. Submit via the community portal, DONE 2026-07-04
 
 Obsidian no longer accepts PRs to `obsidian-releases` (the repo has pull
-requests disabled — verified 2026-07-04). Submission now goes through their
+requests disabled, verified 2026-07-04). Submission now goes through their
 portal:
 
 1. Go to <https://community.obsidian.md> and sign in with your Obsidian
@@ -23,7 +23,7 @@ changes, fix in-repo and publish a bumped release.
 The freemium angle is disclosed in README and UI: free tier fully works,
 Pro is an optional one-time key.
 
-Review queue is measured in weeks — submit before anything else. (The old
+Review queue is measured in weeks, submit before anything else. (The old
 `add-basecraft` branch on the obsidian-releases fork is obsolete; delete
 the fork whenever.)
 
@@ -36,7 +36,7 @@ the fork whenever.)
 - No webhook and no worker needed: the plugin validates keys directly
   against Polar's public customer-portal endpoints with the org id baked in
   (`src/license/client.ts`).
-- After creating, copy the checkout URL and put it on hewnpath.com — the
+- After creating, copy the checkout URL and put it on hewnpath.com, the
   plugin's "Get Basecraft Pro" links point at <https://hewnpath.com>.
 
 ## 3. Smoke test (5 min)

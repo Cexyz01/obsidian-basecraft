@@ -137,10 +137,10 @@ export class PivotView extends BasesView {
 
 		const rowDimLabel = cfg.rowDim
 			? this.config.getDisplayName(cfg.rowDim) ?? cfg.rowDim
-			: "—";
+			: "-";
 		const colDimLabel = cfg.colDim
 			? this.config.getDisplayName(cfg.colDim) ?? cfg.colDim
-			: "—";
+			: "-";
 
 		renderPivot(this.bodyEl, result, cfg, {
 			app: this.app,
@@ -166,7 +166,7 @@ export class PivotView extends BasesView {
 
 	private openDrillDown(row: string, col: string, cell: PivotCell): void {
 		const files: TFile[] = cell.entries.map((e) => e.file);
-		new DrillDownModal(this.app, `${row} × ${col} — ${files.length} note(s)`, files).open();
+		new DrillDownModal(this.app, `${row} × ${col}: ${files.length} note(s)`, files).open();
 	}
 
 	private exportCsv(): void {

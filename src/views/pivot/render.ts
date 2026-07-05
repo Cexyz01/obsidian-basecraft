@@ -177,11 +177,11 @@ export function renderToolbar(
 	const aggOpts = [
 		{ value: "count", label: "Count" },
 		{ value: "sum", label: "Sum" },
-		{ value: "avg", label: isPro ? "Average" : "Average — Pro", disabled: !isPro },
-		{ value: "min", label: isPro ? "Min" : "Min — Pro", disabled: !isPro },
-		{ value: "max", label: isPro ? "Max" : "Max — Pro", disabled: !isPro },
-		{ value: "median", label: isPro ? "Median" : "Median — Pro", disabled: !isPro },
-		{ value: "distinct", label: isPro ? "Distinct count" : "Distinct — Pro", disabled: !isPro },
+		{ value: "avg", label: isPro ? "Average" : "Average (Pro)", disabled: !isPro },
+		{ value: "min", label: isPro ? "Min" : "Min (Pro)", disabled: !isPro },
+		{ value: "max", label: isPro ? "Max" : "Max (Pro)", disabled: !isPro },
+		{ value: "median", label: isPro ? "Median" : "Median (Pro)", disabled: !isPro },
+		{ value: "distinct", label: isPro ? "Distinct count" : "Distinct (Pro)", disabled: !isPro },
 	];
 	select("Aggregation", config.aggregation, aggOpts, (v) =>
 		handlers.onAggregationChange(v ?? "count")
@@ -190,9 +190,9 @@ export function renderToolbar(
 
 	const pctOpts = [
 		{ value: "none", label: "Raw values" },
-		{ value: "total", label: isPro ? "% of total" : "% of total — Pro", disabled: !isPro },
-		{ value: "row", label: isPro ? "% of row" : "% of row — Pro", disabled: !isPro },
-		{ value: "col", label: isPro ? "% of column" : "% of column — Pro", disabled: !isPro },
+		{ value: "total", label: isPro ? "% of total" : "% of total (Pro)", disabled: !isPro },
+		{ value: "row", label: isPro ? "% of row" : "% of row (Pro)", disabled: !isPro },
+		{ value: "col", label: isPro ? "% of column" : "% of column (Pro)", disabled: !isPro },
 	];
 	select("Display", config.percentMode, pctOpts, (v) =>
 		handlers.onPercentModeChange((v ?? "none") as PercentMode)
@@ -206,30 +206,30 @@ export function renderToolbar(
 	});
 	if (!isPro) {
 		heatToggle.disabled = true;
-		heatToggle.setText("Heatmap — Pro");
+		heatToggle.setText("Heatmap (Pro)");
 	}
 	heatToggle.addEventListener("click", () => handlers.onHeatmapToggle(!config.heatmap));
 
 	const csvBtn = actions.createEl("button", { cls: "basecraft-pivot-toggle", text: "Export CSV" });
 	if (!isPro) {
 		csvBtn.disabled = true;
-		csvBtn.setText("CSV — Pro");
+		csvBtn.setText("CSV (Pro)");
 	}
 	csvBtn.addEventListener("click", () => handlers.onExportCsv());
 
 	const xlsxBtn = actions.createEl("button", { cls: "basecraft-pivot-toggle", text: "Export Excel" });
 	if (!isPro) {
 		xlsxBtn.disabled = true;
-		xlsxBtn.setText("Excel — Pro");
+		xlsxBtn.setText("Excel (Pro)");
 	}
 	xlsxBtn.addEventListener("click", () => handlers.onExportXlsx());
 
 	if (!isPro) {
 		const upgrade = containerEl.createDiv({ cls: "basecraft-pivot-upgrade" });
 		upgrade.createEl("a", {
-			text: "Get Basecraft Pro — $14 one-time",
+			text: "Get Basecraft Pro ($14 one-time)",
 			href: BUY_URL,
 		});
-		upgrade.appendText(" — advanced aggregations, drill-down, heatmap, percentages and export");
+		upgrade.appendText(": advanced aggregations, drill-down, heatmap, percentages and export");
 	}
 }

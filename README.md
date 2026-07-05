@@ -14,7 +14,7 @@ Say your reading notes have `author` and `year` properties. Rows = author, colum
 - `Count` and `Sum` aggregations
 - Row, column and grand totals
 
-## Pro — $14 one-time
+## Pro: $14 one-time
 
 - `Average`, `Min`, `Max`, `Median` and `Distinct count` aggregations
 - Drill-down: click a cell to see and open the matching notes
@@ -48,8 +48,8 @@ That's it. The toolbar shows what's locked behind Pro and what's free.
 
 ## Status
 
-V0.4 — license activation is live (Polar), drill-down, heatmap, percentages and CSV/Excel export all work. Multi-dimensional rows/columns and PNG export are next.
+V0.4: license activation is live (Polar), drill-down, heatmap, percentages and CSV/Excel export all work. Multi-dimensional rows/columns and PNG export are next.
 
 ## Built by Hewnpath
 
-One-person studio. Basecraft is the Obsidian sibling of HewnFrame (Figma) and HewnFlow (Webflow) — small tools that do one job and put a number on it. More at [hewnpath.com](https://hewnpath.com).
+One-person studio. Basecraft is the Obsidian sibling of HewnFrame (Figma) and HewnFlow (Webflow): small tools that do one job and put a number on it. More at [hewnpath.com](https://hewnpath.com).
