@@ -1,4 +1,4 @@
-# Basecraft — launch posts
+# Basecraft, launch posts
 
 Tre post, tre posti, tre toni. Ordine consigliato: forum → Reddit → Discord
 (il forum dà un link citabile nei commenti Reddit se qualcuno chiede dettagli).
@@ -9,9 +9,9 @@ Momento consigliato: lunedì tra le 15:00 e le 17:00 italiane (mattina USA east 
 frasi tue vere. Tutto il resto è pronto così com'è.
 
 Immagini (in `marketing/png/`):
-- `pivot-count.png` — la pivot base, per il post Reddit
-- `pivot-heatmap.png` — heatmap medie rating, seconda immagine ovunque serva
-- `pivot-drilldown.png` — drill-down aperto, per il forum
+- `pivot-count.png`, la pivot base, per il post Reddit
+- `pivot-heatmap.png`, heatmap medie rating, seconda immagine ovunque serva
+- `pivot-drilldown.png`, drill-down aperto, per il forum
 
 ---
 
@@ -62,7 +62,7 @@ just funds the maintenance" e basta, niente difese lunghe.
 **Titolo:**
 
 ```
-Basecraft — pivot tables for Bases (count, sum, drill-down, heatmap, Excel export)
+Basecraft, pivot tables for Bases (count, sum, drill-down, heatmap, Excel export)
 ```
 
 **Corpo** (allega tutte e tre le immagini nell'ordine count → heatmap → drilldown):
@@ -102,7 +102,7 @@ Known limits in V0.4: one property per axis (multi-level rows/columns are
 planned), and the Excel export is values-only, no formulas.
 
 [TUO ANEDDOTO: una frase su come lo usi tu oggi, tipo "I use it daily for my
-reading log and expense notes." — dev'essere vera.]
+reading log and expense notes.", dev'essere vera.]
 
 Happy to answer anything, and bug reports are welcome on GitHub.
 ```
@@ -112,7 +112,7 @@ Happy to answer anything, and bug reports are welcome on GitHub.
 ## 3 · Discord Obsidian → canale #updates (o #plugin-showcase)
 
 ```
-Basecraft is now in the community store — it adds a Pivot view to Bases.
+Basecraft is now in the community store, it adds a Pivot view to Bases.
 Row property × column property × aggregation = a cross-table of your notes
 (reading log by author × year, tasks by status × project, and so on).
 Count/sum pivots are free, everything stays in your vault.
