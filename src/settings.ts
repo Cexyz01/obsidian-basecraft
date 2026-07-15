@@ -2,13 +2,16 @@ import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import type BasecraftPlugin from "./main";
 import { activateKey, deactivateKey } from "./license/client";
 import { BUY_URL, DEFAULT_LICENSE, type LicenseStatus } from "./license/gate";
+import { DEFAULT_REVIEW, type ReviewState } from "./review";
 
 export interface BasecraftSettings {
 	license: LicenseStatus;
+	review: ReviewState;
 }
 
 export const DEFAULT_SETTINGS: BasecraftSettings = {
 	license: { ...DEFAULT_LICENSE },
+	review: { ...DEFAULT_REVIEW },
 };
 
 export class BasecraftSettingTab extends PluginSettingTab {

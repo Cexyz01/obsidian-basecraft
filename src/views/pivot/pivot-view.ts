@@ -18,6 +18,11 @@ import { renderPivot, renderToolbar, type PropertyChoice } from "./render";
 import { DrillDownModal } from "../../lib/drill-down";
 import { downloadFile, pivotToCsv } from "../../lib/csv";
 import { downloadBuffer, pivotToXlsx } from "../../lib/xlsx";
+import {
+	recordSuccessfulRender,
+	renderReviewBanner,
+	shouldPromptReview,
+} from "../../review";
 
 export const PIVOT_VIEW_ID = "basecraft-pivot";
 
@@ -26,7 +31,10 @@ export class PivotView extends BasesView {
 
 	private toolbarEl!: HTMLElement;
 	private bodyEl!: HTMLElement;
+	private reviewEl!: HTMLElement;
 	private currentConfig: PivotConfig | null = null;
+	private renderCounted = false;
+	private reviewShown = false;
 
 	constructor(
 		controller: QueryController,
@@ -41,6 +49,7 @@ export class PivotView extends BasesView {
 		this.hostEl.addClass("basecraft-view");
 		this.toolbarEl = this.hostEl.createDiv({ cls: "basecraft-pivot-toolbar-wrapper" });
 		this.bodyEl = this.hostEl.createDiv({ cls: "basecraft-pivot-body" });
+		this.reviewEl = this.hostEl.createDiv({ cls: "basecraft-review-slot" });
 		this.plugin.registerActiveView(this);
 	}
 
@@ -67,7 +76,8 @@ export class PivotView extends BasesView {
 			this.currentConfig = cfg;
 			const props = this.collectProperties();
 			this.drawToolbar(cfg, props, proActive);
-			this.drawBody(cfg);
+			const hasData = this.drawBody(cfg);
+			if (hasData) this.handleReview();
 		} catch (err) {
 			console.error("Basecraft pivot render failed:", err);
 			this.bodyEl.empty();
@@ -131,7 +141,7 @@ export class PivotView extends BasesView {
 		});
 	}
 
-	private drawBody(cfg: PivotConfig): void {
+	private drawBody(cfg: PivotConfig): boolean {
 		const entries = this.data?.data ?? [];
 		const result = computePivot(entries, cfg);
 
@@ -151,6 +161,23 @@ export class PivotView extends BasesView {
 				? (row, col, cell) => this.openDrillDown(row, col, cell)
 				: undefined,
 		});
+
+		return result.rows.length > 0 && result.cols.length > 0;
+	}
+
+	private handleReview(): void {
+		if (!this.renderCounted) {
+			this.renderCounted = true;
+			void recordSuccessfulRender(this.plugin).then(() => this.showReviewIfDue());
+			return;
+		}
+		this.showReviewIfDue();
+	}
+
+	private showReviewIfDue(): void {
+		if (this.reviewShown || !shouldPromptReview(this.plugin)) return;
+		this.reviewShown = true;
+		renderReviewBanner(this.reviewEl, this.plugin, () => this.reviewEl.empty());
 	}
 
 	private update(patch: Partial<PivotConfig>): void {

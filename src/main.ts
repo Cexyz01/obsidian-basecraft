@@ -49,6 +49,7 @@ export default class BasecraftPlugin extends Plugin {
 			...DEFAULT_SETTINGS,
 			...(stored ?? {}),
 			license: { ...DEFAULT_SETTINGS.license, ...(stored?.license ?? {}) },
+			review: { ...DEFAULT_SETTINGS.review, ...(stored?.review ?? {}) },
 		};
 	}
 
