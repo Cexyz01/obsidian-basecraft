@@ -1,5 +1,5 @@
 import type { BasesEntry, BasesPropertyId } from "obsidian";
-import type { PivotAggregation, PivotConfig } from "./options";
+import type { DateBucket, PivotAggregation, PivotConfig } from "./options";
 
 export interface PivotCell {
 	value: number;
@@ -18,12 +18,41 @@ export interface PivotResult {
 
 const EMPTY = "(empty)";
 
-function label(entry: BasesEntry, prop: BasesPropertyId | null): string {
+// Date-only strings must not shift a day depending on the vault's timezone,
+// so parse them as local dates instead of letting Date treat them as UTC.
+const DATE_ONLY = /^(\d{4})-(\d{2})-(\d{2})/;
+
+function parseDate(s: string): Date | null {
+	const m = s.match(DATE_ONLY);
+	if (m) {
+		const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+		return Number.isNaN(d.getTime()) ? null : d;
+	}
+	const d = new Date(s);
+	return Number.isNaN(d.getTime()) ? null : d;
+}
+
+/**
+ * Bucket labels are zero-padded so the pivot's lexicographic sort is also
+ * chronological: "2026", "2026-Q3", "2026-07".
+ */
+export function bucketLabel(raw: string, bucket: DateBucket): string {
+	if (bucket === "none") return raw;
+	const d = parseDate(raw);
+	if (!d) return raw;
+	const year = d.getFullYear().toString();
+	if (bucket === "year") return year;
+	if (bucket === "quarter") return `${year}-Q${Math.floor(d.getMonth() / 3) + 1}`;
+	return `${year}-${(d.getMonth() + 1).toString().padStart(2, "0")}`;
+}
+
+function label(entry: BasesEntry, prop: BasesPropertyId | null, bucket: DateBucket = "none"): string {
 	if (!prop) return "";
 	const v = entry.getValue(prop);
 	if (v == null) return EMPTY;
 	const s = v.toString();
-	return s.length === 0 ? EMPTY : s;
+	if (s.length === 0) return EMPTY;
+	return bucketLabel(s, bucket);
 }
 
 function num(entry: BasesEntry, prop: BasesPropertyId | null): number | null {
@@ -77,14 +106,16 @@ function aggregate(
 
 export function computePivot(entries: BasesEntry[], config: PivotConfig): PivotResult {
 	const { rowDim, colDim, aggregation, valueProp } = config;
+	const rowBucket = config.rowBucket ?? "none";
+	const colBucket = config.colBucket ?? "none";
 
 	const rowSet = new Set<string>();
 	const colSet = new Set<string>();
 	const groups = new Map<string, BasesEntry[]>();
 
 	for (const entry of entries) {
-		const r = label(entry, rowDim);
-		const c = label(entry, colDim);
+		const r = label(entry, rowDim, rowBucket);
+		const c = label(entry, colDim, colBucket);
 		rowSet.add(r);
 		colSet.add(c);
 		const key = `${r}|||${c}`;

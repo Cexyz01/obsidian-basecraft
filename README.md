@@ -17,6 +17,7 @@ Say your reading notes have `author` and `year` properties. Rows = author, colum
 ## Pro: $14 one-time
 
 - `Average`, `Min`, `Max`, `Median` and `Distinct count` aggregations
+- Date grouping: bucket any date property by month, quarter or year (expenses by category × month without helper properties)
 - Drill-down: click a cell to see and open the matching notes
 - Heatmap conditional formatting
 - Show values as `% of total`, `% of row`, or `% of column`

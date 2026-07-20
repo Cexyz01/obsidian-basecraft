@@ -1,6 +1,6 @@
 import type { App } from "obsidian";
 import type { PivotResult, PivotCell } from "./compute";
-import type { PivotConfig, PercentMode } from "./options";
+import type { PivotConfig, PercentMode, DateBucket } from "./options";
 import { BUY_URL } from "../../license/gate";
 
 export interface RenderContext {
@@ -19,6 +19,8 @@ export interface PropertyChoice {
 export interface ToolbarHandlers {
 	onRowDimChange: (propId: string | null) => void;
 	onColDimChange: (propId: string | null) => void;
+	onRowBucketChange: (bucket: DateBucket) => void;
+	onColBucketChange: (bucket: DateBucket) => void;
 	onAggregationChange: (agg: string) => void;
 	onValuePropChange: (propId: string | null) => void;
 	onPercentModeChange: (mode: PercentMode) => void;
@@ -171,8 +173,26 @@ export function renderToolbar(
 
 	const propOpts = properties.map((p) => ({ value: p.id, label: p.label }));
 
+	const bucketOpts = (["year", "quarter", "month"] as const).map((b) => ({
+		value: b,
+		label: isPro
+			? b.charAt(0).toUpperCase() + b.slice(1)
+			: `${b.charAt(0).toUpperCase() + b.slice(1)} (Pro)`,
+		disabled: !isPro,
+	}));
+
 	select("Rows", config.rowDim, propOpts, handlers.onRowDimChange);
+	if (config.rowDim) {
+		select("Group dates", config.rowBucket === "none" ? null : config.rowBucket, bucketOpts, (v) =>
+			handlers.onRowBucketChange((v ?? "none") as DateBucket)
+		);
+	}
 	select("Columns", config.colDim, propOpts, handlers.onColDimChange);
+	if (config.colDim) {
+		select("Group dates", config.colBucket === "none" ? null : config.colBucket, bucketOpts, (v) =>
+			handlers.onColBucketChange((v ?? "none") as DateBucket)
+		);
+	}
 
 	const aggOpts = [
 		{ value: "count", label: "Count" },

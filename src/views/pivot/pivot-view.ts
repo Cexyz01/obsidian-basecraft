@@ -11,6 +11,7 @@ import {
 	loadPivotConfig,
 	type PivotConfig,
 	type PivotAggregation,
+	type DateBucket,
 	isProAggregation,
 } from "./options";
 import { computePivot, type PivotCell } from "./compute";
@@ -71,6 +72,8 @@ export class PivotView extends BasesView {
 				if (isProAggregation(cfg.aggregation)) cfg.aggregation = "count";
 				if (cfg.percentMode !== "none") cfg.percentMode = "none";
 				if (cfg.heatmap) cfg.heatmap = false;
+				if (cfg.rowBucket !== "none") cfg.rowBucket = "none";
+				if (cfg.colBucket !== "none") cfg.colBucket = "none";
 			}
 
 			this.currentConfig = cfg;
@@ -101,6 +104,20 @@ export class PivotView extends BasesView {
 		renderToolbar(this.toolbarEl, cfg, props, proActive, {
 			onRowDimChange: (v) => this.update({ rowDim: v as BasesPropertyId | null }),
 			onColDimChange: (v) => this.update({ colDim: v as BasesPropertyId | null }),
+			onRowBucketChange: (bucket: DateBucket) => {
+				if (bucket !== "none" && !proActive) {
+					this.notifyProRequired("Date grouping");
+					return;
+				}
+				this.update({ rowBucket: bucket });
+			},
+			onColBucketChange: (bucket: DateBucket) => {
+				if (bucket !== "none" && !proActive) {
+					this.notifyProRequired("Date grouping");
+					return;
+				}
+				this.update({ colBucket: bucket });
+			},
 			onAggregationChange: (v) => {
 				const agg = v as PivotAggregation;
 				if (isProAggregation(agg) && !proActive) {
@@ -188,6 +205,9 @@ export class PivotView extends BasesView {
 		} catch (err) {
 			console.error("Basecraft: failed to persist pivot config", err);
 		}
+		// Redraw the toolbar too: the date-grouping selects appear and
+		// disappear with their dimension.
+		this.drawToolbar(next, this.collectProperties(), isPro(this.plugin));
 		this.drawBody(next);
 	}
 

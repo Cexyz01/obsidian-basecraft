@@ -11,9 +11,13 @@ export type PivotAggregation =
 
 export type PercentMode = "none" | "total" | "row" | "col";
 
+export type DateBucket = "none" | "year" | "quarter" | "month";
+
 export interface PivotConfig {
 	rowDim: BasesPropertyId | null;
 	colDim: BasesPropertyId | null;
+	rowBucket: DateBucket;
+	colBucket: DateBucket;
 	aggregation: PivotAggregation;
 	valueProp: BasesPropertyId | null;
 	showTotals: boolean;
@@ -24,6 +28,8 @@ export interface PivotConfig {
 export const DEFAULT_PIVOT_CONFIG: PivotConfig = {
 	rowDim: null,
 	colDim: null,
+	rowBucket: "none",
+	colBucket: "none",
 	aggregation: "count",
 	valueProp: null,
 	showTotals: true,
